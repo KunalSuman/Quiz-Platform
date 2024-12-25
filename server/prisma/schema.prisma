@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Question{
+model question{
     id Int @id @default(autoincrement())
     question String
     option1 String
@@ -21,12 +21,13 @@ model Question{
     option3 String
     option4 String
     answer String
-    paperId String
-    QuestionPAper QuestionPaper @relation(fields: [paperId],references: [id])
+    paperid String  @map("paperid")
+    questionpaper questionpaper @relation(fields: [paperid],references: [id])
 }
 
-model QuestionPaper{
+model questionpaper{
     id String @id @default(uuid())
     title String
-    questions Question[]
+    questions question[]
+    @@map("questionpaper")
 }

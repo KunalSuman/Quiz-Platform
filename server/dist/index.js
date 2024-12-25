@@ -5,24 +5,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 app.post('/admin', async (req, res) => {
     try {
-        const paper = await prisma.questionPaper.create({});
-        const question = await prisma.question.create({
+        const paper = await prisma.questionpaper.create({
             data: {
-                question: req.body.question,
-                option1: req.body.option1,
-                option2: req.body.option2,
-                option3: req.body.option3,
-                option4: req.body.option4,
-                answer: req.body.answer,
-                paperId: paper.id,
+                title: req.body.title,
             }
         });
-        res.send(question.id);
+        res.json({ paperId: paper.id });
     }
     catch (error) {
         res.send("error");
@@ -30,7 +25,8 @@ app.post('/admin', async (req, res) => {
 });
 app.post('/admin/:paperId', async (req, res) => {
     try {
-        const paper = await prisma.questionPaper.findFirst({
+        console.log("Paper ID on server:", req.params.paperId);
+        const paper = await prisma.questionpaper.findUnique({
             where: {
                 id: req.params.paperId,
             },
@@ -47,10 +43,11 @@ app.post('/admin/:paperId', async (req, res) => {
                 option3: req.body.option3,
                 option4: req.body.option4,
                 answer: req.body.answer,
-                paperId: req.params.paperId,
+                paperid: req.params.paperId,
             }
         });
-        res.send(addquestion);
+        console.log(addquestion);
+        res.json(addquestion);
     }
     catch (error) {
         res.send("error");
@@ -60,7 +57,7 @@ app.get('/home/:paperId', async (req, res) => {
     try {
         const value = await prisma.question.findFirst({
             where: {
-                paperId: req.params.paperId,
+                paperid: req.params.paperId,
                 id: req.body.id,
             },
         });
@@ -87,4 +84,4 @@ app.post('/home', async (req, res) => {
         res.send("error");
     }
 });
-app.listen(3000);
+app.listen(4000);

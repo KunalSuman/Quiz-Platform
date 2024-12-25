@@ -1,18 +1,18 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-
+import cors from 'cors';
 const app = express();
 const prisma = new PrismaClient();
 app.use(express.json());
-
+app.use(cors());
 app.post('/admin',async (req,res)=>{
     try{
-        const paper = await prisma.questionPaper.create({
+        const paper = await prisma.questionpaper.create({
             data:{
                 title : req.body.title,
             }
         });
-        res.send(paper.id);
+        res.json({paperId : paper.id});
     }
     catch(error){
         res.send("error");
@@ -21,7 +21,8 @@ app.post('/admin',async (req,res)=>{
 
 app.post('/admin/:paperId',async (req,res)=>{
     try{
-        const paper = await prisma.questionPaper.findFirst({
+        console.log("Paper ID on server:", req.params.paperId);
+        const paper = await prisma.questionpaper.findUnique({
             where:{
                 id:req.params.paperId,
             },
@@ -38,10 +39,11 @@ app.post('/admin/:paperId',async (req,res)=>{
                 option3:req.body.option3,
                 option4:req.body.option4,
                 answer:req.body.answer,
-                paperId:req.params.paperId,
+                paperid:req.params.paperId,
             }
         });
-        res.send(addquestion);
+        console.log(addquestion);
+        res.json(addquestion);
     }
     catch(error){
         res.send("error");
@@ -52,7 +54,7 @@ app.get('/home/:paperId',async (req,res)=>{
     try{
         const value = await prisma.question.findFirst({
             where:{
-                paperId:req.params.paperId,
+                paperid:req.params.paperId,
                 id:req.body.id,
             },
         });
@@ -80,4 +82,4 @@ app.post('/home',async (req,res)=>{
         res.send("error");
     }
 })
-app.listen(3000);
+app.listen(4000);

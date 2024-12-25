@@ -6,7 +6,7 @@ export const Question_Card = () => {
     const [option3 , setoption3] = useState("3000");
     const [option4 , setoption4] = useState("4000");
     const [question , setquestion] = useState("What is 2+2?");
-    const [iscorrect , setiscorrect] = useState(false);
+    const [iscorrect , setiscorrect] = useState();
     const [selected , setselected] = useState();
     return (
         <div className = "flex flex-col bg-white items-center rounded-md m-4 py-4 w-full">

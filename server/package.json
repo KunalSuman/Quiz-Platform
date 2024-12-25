@@ -2,6 +2,8 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "^6.1.0",
+    "@types/cors": "^2.8.17",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "prisma": "^6.1.0"
   },
