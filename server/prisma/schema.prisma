@@ -27,5 +27,6 @@ model Question{
 
 model QuestionPaper{
     id String @id @default(uuid())
-    Question Question[]
+    title String
+    questions Question[]
 }
