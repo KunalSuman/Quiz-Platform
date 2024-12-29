@@ -49,26 +49,31 @@ app.post('/admin/:paperId',async (req,res)=>{
         res.send("error");
     }
 });
-
-app.get('/home/:paperId',async (req,res)=>{
+app.get('/home' ,async (req,res)=>{
     try{
-        const value = await prisma.question.findFirst({
+        const papers = await prisma.questionpaper.findMany();
+        res.json(papers);
+    }catch(error){
+        res.send("error");
+    }
+});
+app.get('/test/:paperId',async (req,res)=>{
+    try{
+        console.log(req.params.paperId);
+        const value = await prisma.question.findMany({
             where:{
                 paperid:req.params.paperId,
-                id:req.body.id,
             },
         });
         if (!value) {
             res.send("not found");
             return;
         }
-        const answer = value.answer;
-        if(answer === req.body.answer){
-            res.send("correct");
-        }
-        else{
-            res.send("incorrect");
-        }
+        res.json(value);
+        // const answer = value.answer;
+        // if(answer === req.body.answer){
+        //     res.json("correct");
+        // }
     }
     catch(error){
         res.send("error")
