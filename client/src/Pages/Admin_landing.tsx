@@ -1,6 +1,6 @@
 import react from "react";
 import { useState ,useEffect } from "react";
-import { Navigate,useNavigate } from "react-router-dom";
+import { Navigate,useNavigate, useParams } from "react-router-dom";
 import { Admin } from "./Admin";
 import axios from "axios";
 
@@ -8,14 +8,14 @@ import axios from "axios";
 
 export const Admin_landing=()=>{
     const navigate = useNavigate();
-    const [paperId, setpaperId] = useState("");
+    const [paperid, setpaperId] = useState("");
     const [title ,settitle] = useState("");
-    
+    const {userid} = useParams();
     const send_data = async ()=>{
-        const res = await axios.post('http://localhost:4000/admin/',{ title})
-        setpaperId(res.data.paperId);
-        console.log(res.data.paperId);
-        navigate(`/admin/${res.data.paperId}`);
+        const res = await axios.post(`http://localhost:4000/admin/${userid}`,{ title})
+        setpaperId(res.data.paperid);
+        console.log(res.data.paperid);
+        navigate(`/admin_create_paper/${res.data.paperid}`);
     }
     return(
         <div className="bg-myblue flex justify-center items-center min-h-screen">

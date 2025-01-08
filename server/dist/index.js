@@ -10,25 +10,59 @@ const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
-app.post('/admin', async (req, res) => {
+app.post('/signup', async (req, res) => {
     try {
-        const paper = await prisma.questionpaper.create({
+        const user = await prisma.user.create({
             data: {
-                title: req.body.title,
+                name: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
             }
         });
-        res.json({ paperId: paper.id });
+        res.json(user.id);
     }
     catch (error) {
         res.send("error");
     }
 });
-app.post('/admin/:paperId', async (req, res) => {
+app.post('/login', async (req, res) => {
     try {
-        console.log("Paper ID on server:", req.params.paperId);
+        const user = await prisma.user.findUnique({
+            where: {
+                email: req.body.email,
+                password: req.body.password,
+            }
+        });
+        if (!user) {
+            res.send("not found");
+            return;
+        }
+    }
+    catch (error) {
+        res.send("error");
+    }
+});
+app.post('/admin/:userid', async (req, res) => {
+    try {
+        const paper = await prisma.questionpaper.create({
+            data: {
+                title: req.body.title,
+                userid: req.params.userid,
+            }
+        });
+        console.log(paper.id);
+        res.json({ paperid: paper.id });
+    }
+    catch (error) {
+        res.send("error");
+    }
+});
+app.post('/admin_create_paper/:paperid', async (req, res) => {
+    try {
+        console.log("Paper ID on server:", req.params.paperid);
         const paper = await prisma.questionpaper.findUnique({
             where: {
-                id: req.params.paperId,
+                id: req.params.paperid,
             },
         });
         if (!paper) {
@@ -43,7 +77,7 @@ app.post('/admin/:paperId', async (req, res) => {
                 option3: req.body.option3,
                 option4: req.body.option4,
                 answer: req.body.answer,
-                paperid: req.params.paperId,
+                paperid: req.params.paperid,
             }
         });
         console.log(addquestion);
@@ -53,7 +87,7 @@ app.post('/admin/:paperId', async (req, res) => {
         res.send("error");
     }
 });
-app.get('/home', async (req, res) => {
+app.get('/home/:userid', async (req, res) => {
     try {
         const papers = await prisma.questionpaper.findMany();
         res.json(papers);

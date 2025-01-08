@@ -11,11 +11,11 @@ export const Admin = () => {
     const [option4 , setoption4] = useState("");
     const [answer , setanswer] = useState("");
     const [isDone , setisDone] = useState(false);
-    const {paperId} = useParams();
+    const {paperid} = useParams();
     const navigate = useNavigate();
     const post_to_server = async(isDone : Boolean)=>{
-        console.log("Paper ID in React:", paperId);
-        const res = await axios.post(`http://localhost:4000/admin/${paperId}`,{
+        console.log("Paper ID in React:", paperid);
+        const res = await axios.post(`http://localhost:4000/admin_create_paper/${paperid}`,{
                 question,
                 option1,
                 option2,
